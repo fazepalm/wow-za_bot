@@ -38,7 +38,7 @@ async def on_message(message):
         'STAPH BOTHERING ME I AM CLEARLY BUSY'
     ]
 
-    if re.search("^ree[e]+$", message.content, re.IGNORECASE):
+    if re.search("^ree[e]+$|^ree$", message.content, re.IGNORECASE):
         ree_string = re.split("ree", message.content, flags=re.IGNORECASE)[-1]
 
         if re.search("ee", ree_string, re.IGNORECASE):
@@ -353,6 +353,6 @@ Quick Recovery ....... 11
 ```
     """
     )
-    
+
 if __name__ == "__main__":
     bot.run(TOKEN)
