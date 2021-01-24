@@ -38,7 +38,7 @@ async def on_message(message):
         'STAPH BOTHERING ME I AM CLEARLY BUSY'
     ]
 
-    if re.search("ree", message.content, re.IGNORECASE):
+    if re.search("^ree[e]+$", message.content, re.IGNORECASE):
         ree_string = re.split("ree", message.content, flags=re.IGNORECASE)[-1]
 
         if re.search("ee", ree_string, re.IGNORECASE):
@@ -55,7 +55,7 @@ async def on_message(message):
         else:
             await message.channel.send(response)
 
-    if re.search("wowza", message.content, re.IGNORECASE) or re.search("bot", message.content, re.IGNORECASE):
+    if re.search("^wowza$|^wowza\s+", message.content, re.IGNORECASE) or re.search("^bot$|^bot\s+", message.content, re.IGNORECASE):
         response = random.choice(wowza_bot_quotes)
         await message.channel.send(response)
 
@@ -221,6 +221,138 @@ async def create_vss_roster(ctx):
         Wearing: *set info*'"""
     )
 
+#Trial CP INFO
+@bot.command()
+async def cp_vss(ctx):
+    await ctx.channel.send(
+    """
+:dragon: __**CP for Sunspire**__ :dragon:
+_The champion point allocations for veteran Sunspire. If it isn't listed here, it should be set to zero (0)._
+    """
+    )
+    await ctx.channel.send(
+    """
+```diff
+- TANK -
+Ironclad ............. 81
+---
+Hardy ................ 43
+Elemental Defender ... 49
+Thick Skinned ........ 81
+---
+Heavy Armor Focus .... 16
+```
+```diff
++ HEALER +
+Ironclad ............. 56
+Spell Shield ......... 70
+---
+Elemental Defender ... 56
+Thick Skinned ........ 56
+---
+Quick Recovery ....... 32
+```
+```ini
+[ DPS ]
+Ironclad ............. 56
+Spell Shield ......... 70
+---
+Elemental Defender ... 56
+Thick Skinned ........ 56
+---
+Quick Recovery ....... 32
+```
+```ini
+[ Tombs DPS - HM only ]
+Ironclad ............. 61
+Spell Shield ......... 45
+---
+Elemental Defender ... 56
+Thick Skinned ........ 44
+---
+Quick Recovery ....... 64
+```
+    """
+    )
 
+@bot.command()
+async def cp_vcr(ctx):
+    await ctx.channel.send(
+    """
+:eagle: __**CP for Cloudrest**__ :eagle:
+_The champion point allocations for veteran Cloudrest. If it isn't listed here, it should be set to zero (0)._
+```diff
+- TANK -
+Ironclad ............. 81
+---
+Hardy ................ 43
+Elemental Defender ... 49
+Thick Skinned ........ 81
+---
+Heavy Armor Focus .... 16
+```
+```diff
++ HEALER +
+Ironclad ............. 56
+Spell Shield ......... 70
+---
+Elemental Defender ... 56
+Thick Skinned ........ 56
+---
+Quick Recovery ....... 32
+```
+```ini
+[ DPS ]
+Ironclad ............. 56
+Spell Shield ......... 70
+---
+Elemental Defender ... 56
+Thick Skinned ........ 56
+---
+Quick Recovery ....... 32
+```
+    """
+    )
+
+@bot.command()
+async def cp_vhof(ctx):
+    await ctx.channel.send(
+    """
+:robot: __**CP for Halls of Fabrication**__ :robot:
+_The champion point allocations for veteran Halls of Fabrication. If it isn't listed here, it should be set to zero (0)._
+```diff
+- TANK -
+Ironclad ............. 81
+---
+Hardy ................ 56
+Elemental Defender ... 56
+Thick Skinned ........ 66
+---
+Heavy Armor Focus .... 11
+```
+```diff
++ HEALER +
+Ironclad ............. 72
+---
+Hardy ................ 56
+Elemental Defender ... 56
+Thick Skinned ........ 66
+---
+L/M Armor Focus ...... 20
+```
+```ini
+[ DPS ]
+Ironclad ............. 66
+Spell Shield ......... 33
+---
+Hardy ................ 56
+Elemental Defender ... 56
+Thick Skinned ........ 48
+---
+Quick Recovery ....... 11
+```
+    """
+    )
+    
 if __name__ == "__main__":
     bot.run(TOKEN)
