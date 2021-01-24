@@ -30,6 +30,12 @@ async def on_ready():
     """
     await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "Hackers"))
 
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.channel.send("This Command: %s Is On Cooldown: %02f Seconds Remaining" % (str(ctx.command), error.retry_after))
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -98,26 +104,31 @@ async def print_count_ree(ctx):
 
 #Trial pictures
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vmol(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vmol_01.png'))
     await ctx.channel.send(file=discord.File('trial_images/vmol_02.gif'))
     await ctx.channel.send(file=discord.File('trial_images/vmol_03.png'))
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vas(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vas_01.gif'))
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vcr(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vcr_01.png'))
     await ctx.channel.send(file=discord.File('trial_images/vcr_02.png'))
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vss(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vss_01.png'))
     await ctx.channel.send(file=discord.File('trial_images/vss_02.png'))
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vhof(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vhof_01.png'))
     await ctx.channel.send(file=discord.File('trial_images/vhof_02.png'))
@@ -125,10 +136,12 @@ async def info_vhof(ctx):
     await ctx.channel.send(file=discord.File('trial_images/vhof_04.png'))
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vka(ctx):
     await ctx.channel.send("https://youtu.be/KEvc8niaNMk")
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def info_vsg(ctx):
     await ctx.channel.send("https://www.youtube.com/watch?v=dnhcF6kROMc&start=980")
     await ctx.channel.send("https://www.youtube.com/watch?v=sUTwzKhAWSw")
@@ -136,6 +149,7 @@ async def info_vsg(ctx):
     await ctx.channel.send(file=discord.File('dungeon_images/vsg_01.png'))
 
 @bot.command()
+@commands.cooldown(1, 60, commands.BucketType.user)
 async def info_brp(ctx):
     await ctx.channel.send("https://www.heathen-horde.com/eso-guides/vet-blackrose-prison-unchained")
     await ctx.channel.send(
@@ -247,6 +261,7 @@ Wearing: *set info*
 
 #Trial CP INFO
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def cp_vss(ctx):
     await ctx.channel.send(
     """
@@ -300,6 +315,7 @@ Quick Recovery ....... 64
     )
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def cp_vcr(ctx):
     await ctx.channel.send(
     """
@@ -339,6 +355,7 @@ Quick Recovery ....... 32
     )
 
 @bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def cp_vhof(ctx):
     await ctx.channel.send(
     """
@@ -371,6 +388,101 @@ Spell Shield ......... 33
 ---
 Hardy ................ 56
 Elemental Defender ... 56
+Thick Skinned ........ 48
+---
+Quick Recovery ....... 11
+```
+    """
+    )
+
+@bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
+async def cp_brp(ctx):
+    await ctx.channel.send(
+    """
+:lizard: __**CP for Blackrose Prison, Dragonstar Arena**__ :lizard:
+_The champion point allocations for veteran Blackrose Prison and Dragonstar Arena. If it isn't listed here, it should be set to zero (0)._
+```diff
+- TANK -
+Ironclad ............. 81
+---
+Hardy ................ 56
+Elemental Defender ... 56
+Thick Skinned ........ 66
+---
+Heavy Armor Focus .... 11
+```
+```diff
++ HEALER +
+Ironclad ............. 81
+Spell Shield ......... 41
+---
+Hardy ................ 32
+Elemental Defender ... 56
+Thick Skinned ........ 37
+---
+Quick Recovery ....... 23
+```
+```ini
+[ DPS ]
+Ironclad ............. 81
+Spell Shield ......... 41
+---
+Hardy ................ 32
+Elemental Defender ... 56
+Thick Skinned ........ 37
+---
+Quick Recovery ....... 23
+```
+    """
+    )
+
+@bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
+async def cp_dsa(ctx):
+    await cp_brp.invoke(ctx)
+
+@bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
+async def cp_vmol(ctx):
+    await ctx.channel.send(
+    """
+:black_cat: __**CP for Maw of Lorkhaj**__ :black_cat:
+_The champion point allocations for veteran Maw of Lorkhaj. If it isn't listed here, it should be set to zero (0)._
+```diff
+- MAIN TANK -
+Ironclad ............. 81
+---
+Hardy ................ 24
+Elemental Defender ... 56
+Thick Skinned ........ 66
+---
+Heavy Armor Focus .... 43
+```
+```diff
+- OFF TANK -
+Ironclad ............. 81
+Spell Shield .........  4
+---
+Hardy ................ 43
+Elemental Defender ... 76
+Thick Skinned ........ 66
+```
+```diff
++ HEALER +
+Ironclad ............. 72
+Spell Shield ......... 57
+---
+Elemental Defender ... 75
+Thick Skinned ........ 66
+```
+```ini
+[ DPS ]
+Ironclad ............. 81
+Spell Shield ......... 32
+---
+Hardy ................ 49
+Elemental Defender ... 49
 Thick Skinned ........ 48
 ---
 Quick Recovery ....... 11
