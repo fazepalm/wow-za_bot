@@ -7,14 +7,12 @@ import re
 from dotenv import load_dotenv
 import tracemalloc
 import json
+import asgiref.sync
 
 ##variables:
 count_ree = 0
+data_dict = {}
 ##
-wowza_json_dict = {
-    "count_ree" : count_ree
-}
-#
 
 bot = commands.Bot(command_prefix = "&", description = "WoWzA Discord Bot")
 
@@ -51,9 +49,26 @@ async def on_message(message):
         'STAPH BOTHERING ME I AM CLEARLY BUSY'
     ]
 
+    data_channel = bot.get_channel(802798664941568010)
+    data_messages = await data_channel.history(limit=200).flatten()
+
     if re.search("^ree[e]+$|^ree$", message.content, re.IGNORECASE):
         global count_ree
-        count_ree += 1
+        global data_dict
+        global_ree_count = 0
+        ree_msg = None
+
+        for data_msg in data_messages:
+            if re.search("#REE_Global_Count:", data_msg.content, re.IGNORECASE):
+                ree_msg = data_msg
+
+        if ree_msg:
+            current_msg_content = data_msg.content
+            ree_count_split = current_msg_content.split(":")[-1]
+            global_ree_count = int(ree_count_split)
+
+        global_ree_count += 1
+
         ree_string = re.split("ree", message.content, flags=re.IGNORECASE)[-1]
 
         if re.search("ee", ree_string, re.IGNORECASE):
@@ -69,13 +84,13 @@ async def on_message(message):
             await message.channel.send("Sorry You Have Hit Discord 2000 Char Limit, Try Again!")
         else:
             await message.channel.send(response)
-        await message.channel.send("The Current Server 'REE' Count is: %d" % (int(count_ree)))
+        await message.channel.send("The Current Server 'REE' Count is: %d" % (int(global_ree_count)))
 
-        wowza_json_dict["count_ree"] = count_ree
-        ##create json writable:
-        with open("wowza_bot_data.json", "w+") as write_file:
-            json.dump(wowza_json_dict, write_file)
-        write_file.close()
+        if ree_msg:
+            updated_msg_content = current_msg_content.replace(ree_count_split, str(global_ree_count))
+            await data_msg.edit(content = updated_msg_content)
+        else:
+            await data_channel.send("#REE_Global_Count: %d" % (global_ree_count))
 
     if re.search("^wowza$|^wowza\s+", message.content, re.IGNORECASE) or re.search("^bot$|^bot\s+", message.content, re.IGNORECASE):
         response = random.choice(wowza_bot_quotes)
