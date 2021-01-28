@@ -11,6 +11,8 @@ import asgiref.sync
 
 ##variables:
 count_ree = 0
+count_wowza = 0
+count_wowza = 0
 data_dict = {}
 ##
 
@@ -19,6 +21,27 @@ bot = commands.Bot(command_prefix = "&", description = "WoWzA Discord Bot")
 tracemalloc.start()
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+
+def query_server_msg_count(server_data_messages, regex_str):
+    server_data_msg = None
+    regex_data_msg = None
+    int_server_data_count = 0
+    server_msg_content = None
+    updated_regex_msg = None
+
+    for server_data_msg in server_data_messages:
+        if re.search(("#%s:" % (regex_str)), server_data_msg.content, re.IGNORECASE):
+            regex_data_msg = server_data_msg
+            server_msg_content = server_data_msg.content
+            server_data_count_split = server_msg_content.split(":")[-1]
+            int_server_data_count = int(server_data_count_split)
+
+    int_server_data_count += 1
+
+    if regex_data_msg:
+        updated_regex_msg = server_msg_content.replace(server_data_count_split, str(int_server_data_count))
+
+    return int_server_data_count, regex_data_msg, updated_regex_msg
 
 @bot.event
 async def on_ready():
@@ -51,6 +74,23 @@ async def on_message(message):
 
     data_channel = bot.get_channel(802798664941568010)
     data_messages = await data_channel.history(limit=200).flatten()
+
+    if re.search("hardly\sknow\s'er", message.content, re.IGNORECASE):
+        global count_wowza
+
+        global_wowza_count, wowza_msg, updated_wowza_msg = query_server_msg_count(data_messages, "wowza_Global_Count")
+        #await message.channel.send("global_wowza_count: %d" % (int(global_wowza_count)))
+
+        await message.channel.send("The Current Server Hardly Know 'Er Count is: %d" % (int(global_wowza_count)))
+        # if wowza_msg:
+        #     await message.channel.send("The Current wowza_msg: %s" % (str(wowza_msg.content)))
+        # if updated_wowza_msg:
+        #     await message.channel.send("The Current updated_wowza_msg: %s" % (str(updated_wowza_msg)))
+
+        if wowza_msg and updated_wowza_msg:
+            await wowza_msg.edit(content = updated_wowza_msg)
+        else:
+            await data_channel.send("#wowza_Global_Count: %d" % (global_wowza_count))
 
     if re.search("^ree[e]+$|^ree$", message.content, re.IGNORECASE):
         global count_ree
@@ -93,8 +133,20 @@ async def on_message(message):
             await data_channel.send("#REE_Global_Count: %d" % (global_ree_count))
 
     if re.search("^wowza$|^wowza\s+", message.content, re.IGNORECASE) or re.search("^bot$|^bot\s+", message.content, re.IGNORECASE):
+        global count_wowza
+
         response = random.choice(wowza_bot_quotes)
         await message.channel.send(response)
+
+        global_wowza_count, wowza_msg, updated_wowza_msg = query_server_msg_count(data_messages, "wowza_Global_Count")
+        #await message.channel.send("global_wowza_count: %d" % (int(global_wowza_count)))
+
+        await message.channel.send("The Current Server WoWzA Count is: %d" % (int(global_wowza_count)))
+
+        if wowza_msg and updated_wowza_msg:
+            await wowza_msg.edit(content = updated_wowza_msg)
+        else:
+            await data_channel.send("#wowza_Global_Count: %d" % (global_wowza_count))
 
     await bot.process_commands(message)
 
