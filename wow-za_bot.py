@@ -75,6 +75,14 @@ async def on_message(message):
     data_channel = bot.get_channel(802798664941568010)
     data_messages = await data_channel.history(limit=200).flatten()
 
+    if re.search("hot", message.content, re.IGNORECASE):
+        emoji = bot.get_emoji(751687047626096683)
+
+        if emoji:
+                await message.add_reaction(emoji)
+        else:
+            await message.channel.send("No Emoji found using id: %s" % ("hot"))
+
     if re.search("hardly\sknow\s'er", message.content, re.IGNORECASE):
         global count_wowza
 
