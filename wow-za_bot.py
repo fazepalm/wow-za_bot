@@ -83,17 +83,23 @@ async def on_message(message):
         else:
             await message.channel.send("No Emoji found using id: %s" % ("hot"))
 
+    if re.search("sad|sadge", message.content, re.IGNORECASE):
+        emoji_list = []
+
+        emoji_list.append(bot.get_emoji(805365256469741578))
+        emoji_list.append(bot.get_emoji(805365268406206505))
+        emoji_list.append(bot.get_emoji(805365248931528705))
+        emoji_list.append(bot.get_emoji(805365262660403210))
+        
+        if None not in emoji_list:
+            await message.add_reaction(random.choice(emoji_list))
+
     if re.search("hardly\sknow\s'er", message.content, re.IGNORECASE):
         global count_wowza
 
         global_wowza_count, wowza_msg, updated_wowza_msg = query_server_msg_count(data_messages, "wowza_Global_Count")
-        #await message.channel.send("global_wowza_count: %d" % (int(global_wowza_count)))
 
         await message.channel.send("The Current Server Hardly Know 'Er Count is: %d" % (int(global_wowza_count)))
-        # if wowza_msg:
-        #     await message.channel.send("The Current wowza_msg: %s" % (str(wowza_msg.content)))
-        # if updated_wowza_msg:
-        #     await message.channel.send("The Current updated_wowza_msg: %s" % (str(updated_wowza_msg)))
 
         if wowza_msg and updated_wowza_msg:
             await wowza_msg.edit(content = updated_wowza_msg)
