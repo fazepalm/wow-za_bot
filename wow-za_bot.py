@@ -90,7 +90,7 @@ async def on_message(message):
         emoji_list.append(bot.get_emoji(805365268406206505))
         emoji_list.append(bot.get_emoji(805365248931528705))
         emoji_list.append(bot.get_emoji(805365262660403210))
-        
+
         if None not in emoji_list:
             await message.add_reaction(random.choice(emoji_list))
 
@@ -571,5 +571,54 @@ Quick Recovery ....... 11
     """
     )
 
+@bot.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
+async def cp_vas(ctx):
+    await ctx.channel.send(
+    """
+:mechanical_arm: __**CP for Asylum Sanctorium**__ :mechanical_arm:
+_The champion point allocations for veteran Asylum Sanctorium. If it isn't listed here, it should be set to zero (0)._
+```diff
+- MAIN TANK -
+Ironclad ............. 81
+---
+Hardy ................ 64
+Elemental Defender ... 49
+Thick Skinned ........ 34
+---
+Heavy Armor Focus .... 42
+```
+```diff
+- OFF TANK -
+Ironclad ............. 81
+---
+Hardy ................ 37
+Elemental Defender ... 64
+Thick Skinned ........ 40
+---
+Quick Recovery ....... 46
+Heavy Armor Focus ....  2
+```
+```diff
++ HEALER +
+Ironclad ............. 81
+Spell Shield ......... 55
+---
+Hardy ................ 37
+Elemental Defender ... 53
+Thick Skinned ........ 44
+```
+```ini
+[ DPS ]
+Ironclad ............. 81
+Spell Shield ......... 87
+---
+Hardy ................ 27
+Elemental Defender ... 64
+---
+Quick Recovery ....... 11
+```
+    """
+    )
 if __name__ == "__main__":
     bot.run(TOKEN)
