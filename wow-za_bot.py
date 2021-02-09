@@ -75,7 +75,15 @@ async def on_message(message):
     data_channel = bot.get_channel(802798664941568010)
     data_messages = await data_channel.history(limit=200).flatten()
 
-    if re.search("hot", message.content, re.IGNORECASE):
+    if re.search(r"(\bcongrat[sz]\b)", message.content, re.IGNORECASE):
+        emoji_list = [u"\U0001F38A", u"\U0001F389", u"\U0001F64C", u"\U0001F60D", u"\U0001F63B", u"\U0001F61B"]
+        if emoji_list:
+            for emoji in emoji_list:
+                await message.add_reaction(emoji)
+        else:
+            await message.channel.send("No Emoji found using id: %s" % ("808791119445098556"))
+
+    if re.search(r"(\bhot\b)", message.content, re.IGNORECASE):
         emoji = bot.get_emoji(751687047626096683)
 
         if emoji:
