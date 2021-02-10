@@ -56,6 +56,8 @@ async def on_ready():
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.channel.send("This Command: %s Is On Cooldown: %02f Seconds Remaining" % (str(ctx.command), error.retry_after))
+    if isinstance(error, (commands.MissingRole, commands.MissingAnyRole)):
+        await ctx.channel.send("This Command: %s Cannot Be Used By %s, Because User Doesn't Have The Required Role/s, User Roles: %s" % (str(ctx.command), str(ctx.author), str(ctx.author.roles)))
 
 @bot.event
 async def on_message(message):
@@ -74,6 +76,11 @@ async def on_message(message):
 
     data_channel = bot.get_channel(802798664941568010)
     data_messages = await data_channel.history(limit=200).flatten()
+
+    if isinstance(message.channel, discord.TextChannel):
+        if message.channel.category is not None:
+            if message.channel.category.id == 796476804525195274:
+                pass
 
     if re.search(r"(\bcongrat[sz]\b)", message.content, re.IGNORECASE):
         emoji_list = [u"\U0001F38A", u"\U0001F389", u"\U0001F64C", u"\U0001F60D", u"\U0001F63B", u"\U0001F61B"]
@@ -320,34 +327,38 @@ Final round: Burn the boss until the first Mechanic, assign each DPS on each lan
 
 #Trial roster creation
 @bot.command()
+@commands.has_role('Raid Lead')
 async def create_vss_roster(ctx):
-    await ctx.channel.send(
-        """
-**__vSS__**
-*Raid description goes here, between two underscores.*
-```ini
-[ SUN, JAN 1, 2021 | 2pm PST | +2 CST | +3 EST | +5 BST | +8 GMT ]```
-MT: @name
-Wearing: *set info*
 
-OT: @name
-Wearing: *set info*
+    if (str(ctx.channel.category)) == "Trials" or (str(ctx.channel.category)) == "NETHER-REGION-BOT":
+        await ctx.channel.send(
+            """
+    **__vSS__**
+    *Raid description goes here, between two underscores.*
+    ```ini
+    [ SUN, JAN 1, 2021 | 2pm PST | +2 CST | +3 EST | +5 BST | +8 GMT ]```
+    MT: @name
+    Wearing: *set info*
 
-__**Head Stack:**__
-Group Healer: @name
-Wearing: *set info*
+    OT: @name
+    Wearing: *set info*
 
-DPS[*set info*][PL][T1]:
-DPS[*set info*][PM][T2]:
-DPS[*set info*][PR][T3]:
-DPS[*set info*]:
+    __**Head Stack:**__
+    Group Healer: @name
+    Wearing: *set info*
 
-__**Wing Stack:**__
-Cage Healer: @name
-Wearing: *set info*
-        """
-    )
+    DPS[*set info*][PL][T1]:
+    DPS[*set info*][PM][T2]:
+    DPS[*set info*][PR][T3]:
+    DPS[*set info*]:
 
+    __**Wing Stack:**__
+    Cage Healer: @name
+    Wearing: *set info*
+            """
+        )
+    else:
+        await ctx.channel.send("Sorry This Command Only Works in Trials or NETHER-REGION-BOT Categories But Was Used In: %s" % (ctx.channel.category))
 #Trial CP INFO
 @bot.command()
 @commands.cooldown(1, 10, commands.BucketType.user)
